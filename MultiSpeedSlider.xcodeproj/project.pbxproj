@@ -14,6 +14,7 @@
 		658E2AD81C172625005B560E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 658E2AD61C172625005B560E /* LaunchScreen.storyboard */; };
 		658E2AE31C172625005B560E /* MultiSpeedSliderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658E2AE21C172625005B560E /* MultiSpeedSliderTests.swift */; };
 		658E2AEE1C172625005B560E /* MultiSpeedSliderUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658E2AED1C172625005B560E /* MultiSpeedSliderUITests.swift */; };
+		658E2B001C1726FE005B560E /* MultiSpeedSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658E2AFF1C1726FE005B560E /* MultiSpeedSlider.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +48,7 @@
 		658E2AE91C172625005B560E /* MultiSpeedSliderUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MultiSpeedSliderUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		658E2AED1C172625005B560E /* MultiSpeedSliderUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiSpeedSliderUITests.swift; sourceTree = "<group>"; };
 		658E2AEF1C172625005B560E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		658E2AFF1C1726FE005B560E /* MultiSpeedSlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiSpeedSlider.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +99,7 @@
 		658E2ACC1C172625005B560E /* MultiSpeedSlider */ = {
 			isa = PBXGroup;
 			children = (
+				658E2AFB1C1726EE005B560E /* Views */,
 				658E2ACD1C172625005B560E /* AppDelegate.swift */,
 				658E2ACF1C172625005B560E /* ViewController.swift */,
 				658E2AD11C172625005B560E /* Main.storyboard */,
@@ -123,6 +126,14 @@
 				658E2AEF1C172625005B560E /* Info.plist */,
 			);
 			path = MultiSpeedSliderUITests;
+			sourceTree = "<group>";
+		};
+		658E2AFB1C1726EE005B560E /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				658E2AFF1C1726FE005B560E /* MultiSpeedSlider.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -258,6 +269,7 @@
 			files = (
 				658E2AD01C172625005B560E /* ViewController.swift in Sources */,
 				658E2ACE1C172625005B560E /* AppDelegate.swift in Sources */,
+				658E2B001C1726FE005B560E /* MultiSpeedSlider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
