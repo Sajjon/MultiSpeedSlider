@@ -86,9 +86,8 @@ public class MultiSpeedSlider: UISlider {
         
         if beginTracking {
             beganTracking()
+            delegate?.scrubbingStatusChanged(true)
         }
-        
-        delegate?.scrubbingStatusChanged(tracking)
         
         return beginTracking
     }
@@ -150,8 +149,7 @@ public class MultiSpeedSlider: UISlider {
         if tracking {
             scrubbingSpeed = scrubbingSpeeds[0]
             sendActionsForControlEvents(UIControlEvents.ValueChanged)
+            delegate?.scrubbingStatusChanged(false)
         }
-        
-        delegate?.scrubbingStatusChanged(tracking)
     }
 }

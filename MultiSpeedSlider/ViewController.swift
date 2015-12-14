@@ -53,6 +53,10 @@ class ViewController: UIViewController, MultiSpeedSliderProtocol {
         speedValueLabel.text = "\(newSpeed)"
     }
     
+    func scrubbingStatusChanged(nowScrubbing: Bool) {
+        print("nowScrubbing: \(nowScrubbing)")
+    }
+    
     //MARK: - IBAction Methods
     @IBAction func valueChanged(sender: UISlider) {
         let elapsedValue = NSTimeInterval(Int(round((sender.value*1)/1)))
