@@ -10,6 +10,7 @@ import UIKit
 
 public protocol MultiSpeedSliderProtocol: class {
     func changedSpeed(newSpeed: Float)
+    func scrubbingStatusChanged(nowScrubbing: Bool)
 }
 
 public class MultiSpeedSlider: UISlider {
@@ -29,7 +30,7 @@ public class MultiSpeedSlider: UISlider {
             }
         }
     }
-    
+        
     //MARK: - Private Methods
     private func beginTrackWithTouchUsingExtendedTouchArea(touch: UITouch) -> Bool {
         let thumbPercent = (value - minimumValue) / (maximumValue - minimumValue)
@@ -86,6 +87,8 @@ public class MultiSpeedSlider: UISlider {
         if beginTracking {
             beganTracking()
         }
+        
+        delegate?.scrubbingStatusChanged(tracking)
         
         return beginTracking
     }
@@ -148,5 +151,7 @@ public class MultiSpeedSlider: UISlider {
             scrubbingSpeed = scrubbingSpeeds[0]
             sendActionsForControlEvents(UIControlEvents.ValueChanged)
         }
+        
+        delegate?.scrubbingStatusChanged(tracking)
     }
 }
