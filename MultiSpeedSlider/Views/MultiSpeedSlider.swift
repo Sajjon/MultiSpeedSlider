@@ -20,7 +20,7 @@ public class MultiSpeedSlider: UISlider {
     private var beganTrackingLocation: CGPoint!
     private var realPositionValue: Float!
     
-    weak var delegate: MultiSpeedSliderProtocol?
+    public weak var delegate: MultiSpeedSliderProtocol?
     var scrubbingSpeeds: [Float] = [1.0, 0.5, 0.25, 0.1, 0.01, 0.001]
     var scrubbingSpeedChangePositions: [CGFloat] = [0.0, 50, 100, 150, 200, 250]
     var scrubbingSpeed: Float = 1.0 {
