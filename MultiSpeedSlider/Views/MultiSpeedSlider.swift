@@ -15,12 +15,13 @@ public protocol MultiSpeedSliderProtocol: class {
 
 public class MultiSpeedSlider: UISlider {
     
-    private let thumbTouchSize: CGSize = CGSizeMake(50, 50)
     
     private var beganTrackingLocation: CGPoint!
     private var realPositionValue: Float!
-    
+
     public weak var delegate: MultiSpeedSliderProtocol?
+    var thumbTouchSize: CGSize = CGSizeMake(50, 50)
+    var allowTap = false
     var scrubbingSpeeds: [Float] = [1.0, 0.5, 0.25, 0.1, 0.01, 0.001]
     var scrubbingSpeedChangePositions: [CGFloat] = [0.0, 50, 100, 150, 200, 250]
     var scrubbingSpeed: Float = 1.0 {
@@ -83,12 +84,19 @@ public class MultiSpeedSlider: UISlider {
     
     public override func beginTrackingWithTouch(touch: UITouch, withEvent event: UIEvent?) -> Bool {
         let beginTracking = beginTrackWithTouchUsingExtendedTouchArea(touch)
-        
+
         if beginTracking {
             beganTracking()
             delegate?.scrubbingStatusChanged(true)
+        } else if allowTap {
+            let tapPoint = touch.locationInView(self)
+            let valueFromTap = CGFloat(maximumValue - minimumValue) * (tapPoint.x - CGFloat(thumbTouchSize.width/2)) / (frame.size.width - thumbTouchSize.width)
+            let newValue = minimumValue + Float(valueFromTap)
+            setValue(newValue, animated: true)
+            sendActionsForControlEvents(.ValueChanged)
+            sendActionsForControlEvents(.TouchUpInside)
         }
-        
+
         return beginTracking
     }
     

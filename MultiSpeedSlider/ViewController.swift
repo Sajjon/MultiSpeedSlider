@@ -30,6 +30,7 @@ class ViewController: UIViewController, MultiSpeedSliderProtocol {
         slider.minimumValue = 0
         slider.value = slider.minimumValue
         slider.maximumValue = 36000 //10h long sound track
+        slider.allowTap = true
     }
     
     private func durationAsHourMinuteSecondString(timeInterval: NSTimeInterval) -> String {
