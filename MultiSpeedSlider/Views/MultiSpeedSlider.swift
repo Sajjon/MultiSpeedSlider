@@ -15,16 +15,17 @@ public protocol MultiSpeedSliderProtocol: class {
 
 public class MultiSpeedSlider: UISlider {
     
-    
+    //MARK: - Private Variables
     private var beganTrackingLocation: CGPoint!
     private var realPositionValue: Float!
 
+    //MARK: - Public Variables
     public weak var delegate: MultiSpeedSliderProtocol?
-    var thumbTouchSize: CGSize = CGSizeMake(50, 50)
-    var allowTap = false
-    var scrubbingSpeeds: [Float] = [1.0, 0.5, 0.25, 0.1, 0.01, 0.001]
-    var scrubbingSpeedChangePositions: [CGFloat] = [0.0, 50, 100, 150, 200, 250]
-    var scrubbingSpeed: Float = 1.0 {
+    public var thumbTouchSize: CGSize = CGSizeMake(50, 50)
+    public var allowTap = false
+    public var scrubbingSpeeds: [Float] = [1.0, 0.5, 0.25, 0.1, 0.01, 0.001]
+    public var scrubbingSpeedChangePositions: [CGFloat] = [0.0, 50, 100, 150, 200, 250]
+    public var scrubbingSpeed: Float = 1.0 {
         didSet {
             if scrubbingSpeed != oldValue {
                 delegate?.changedSpeed(scrubbingSpeed)

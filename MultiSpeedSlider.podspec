@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name     = 'MultiSpeedSlider'
-  s.version  = '1.0.3'
+  s.version  = '1.0.4'
   s.license  = 'MIT'
   s.summary  = 'Subclass of UISlider giving variable scrubbing speed and also larger touch area support'
   s.homepage = 'https://github.com/Sajjon/MultiSpeedSlider'
