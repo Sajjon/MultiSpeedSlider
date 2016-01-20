@@ -84,18 +84,20 @@ public class MultiSpeedSlider: UISlider {
     }
     
     public override func beginTrackingWithTouch(touch: UITouch, withEvent event: UIEvent?) -> Bool {
-        let beginTracking = beginTrackWithTouchUsingExtendedTouchArea(touch)
+        let beginTracking = beginTrackWithTouchUsingExtendedTouchArea(touch) || allowTap
 
-        if beginTracking {
-            beganTracking()
-            delegate?.scrubbingStatusChanged(true)
-        } else if allowTap {
+        if allowTap {
             let tapPoint = touch.locationInView(self)
             let valueFromTap = CGFloat(maximumValue - minimumValue) * (tapPoint.x - CGFloat(thumbTouchSize.width/2)) / (frame.size.width - thumbTouchSize.width)
             let newValue = minimumValue + Float(valueFromTap)
             setValue(newValue, animated: true)
+            sendActionsForControlEvents(.TouchDragInside)
             sendActionsForControlEvents(.ValueChanged)
-            sendActionsForControlEvents(.TouchUpInside)
+        }
+
+        if beginTracking {
+            beganTracking()
+            delegate?.scrubbingStatusChanged(true)
         }
 
         return beginTracking
