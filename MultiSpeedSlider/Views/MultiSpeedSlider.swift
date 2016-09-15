@@ -21,14 +21,14 @@ public class MultiSpeedSlider: UISlider {
 
     //MARK: - Public Variables
     public weak var delegate: MultiSpeedSliderProtocol?
-    public var thumbTouchSize: CGSize = CGSizeMake(50, 50)
+    public var thumbTouchSize: CGSize = CGSize(width: 50, height: 50)
     public var allowTap = false
     public var scrubbingSpeeds: [Float] = [1.0, 0.5, 0.25, 0.1, 0.01, 0.001]
     public var scrubbingSpeedChangePositions: [CGFloat] = [0.0, 50, 100, 150, 200, 250]
     public var scrubbingSpeed: Float = 1.0 {
         didSet {
             if scrubbingSpeed != oldValue {
-                delegate?.changedSpeed(scrubbingSpeed)
+                delegate?.changedSpeed(newSpeed: scrubbingSpeed)
             }
         }
     }
@@ -38,13 +38,13 @@ public class MultiSpeedSlider: UISlider {
         let thumbPercent = (value - minimumValue) / (maximumValue - minimumValue)
         
         let thumbHeight: CGFloat
-        if let thumbImage = thumbImageForState(UIControlState.Normal) {
+        if let thumbImage = thumbImage(for: .normal) {
             thumbHeight = thumbImage.size.height
         } else {
             thumbHeight = self.frame.height
         }
         let thumbPos = CGFloat(thumbHeight) + (CGFloat(thumbPercent) * (CGFloat(bounds.size.width) - (2 * CGFloat(thumbHeight))))
-        let touchPoint = touch.locationInView(self)
+        let touchPoint = touch.location(in: self)
         
         let beginTouch = touchPoint.x >= (thumbPos - thumbTouchSize.width) && touchPoint.x <= (thumbPos + thumbTouchSize.width)
         return beginTouch
@@ -54,7 +54,7 @@ public class MultiSpeedSlider: UISlider {
         var index: Int? = nil
         
         let scrubbingSpeedChangePositions = maybeScrubbingSpeedChangePositions ?? self.scrubbingSpeedChangePositions
-        for (scrubbingSpeedIndex, scrubbingSpeedVerticalOffset) in scrubbingSpeedChangePositions.enumerate() {
+        for (scrubbingSpeedIndex, scrubbingSpeedVerticalOffset) in scrubbingSpeedChangePositions.enumerated() {
             if verticalOffset < scrubbingSpeedVerticalOffset {
                 index = scrubbingSpeedIndex
                 break
@@ -69,44 +69,44 @@ public class MultiSpeedSlider: UISlider {
          * This ensures that the thumb is correctly re-positioned when the touch position moves
          * back to the track after tracking in one of the slower tracking zones.
          */
-        let trackRect = trackRectForBounds(bounds)
-        let thumbRect = thumbRectForBounds(bounds, trackRect: trackRect, value: value)
-        let x = thumbRect.origin.x + (thumbRect.size.width/2)
-        let y = thumbRect.origin.y + (thumbRect.size.height/2)
-        beganTrackingLocation = CGPointMake(x, y)
+        let track = trackRect(forBounds: bounds)
+        let thumb = thumbRect(forBounds: bounds, trackRect: track, value: value)
+        let x = thumb.origin.x + (thumb.size.width/2)
+        let y = thumb.origin.y + (thumb.size.height/2)
+        beganTrackingLocation = CGPoint(x: x, y: y)
         realPositionValue = value
     }
     
     //MARK: - Touch Events
-    public override func pointInside(point: CGPoint, withEvent event: UIEvent?) -> Bool {
-        let bounds = CGRectInset(self.bounds, -thumbTouchSize.width, -thumbTouchSize.height)
-        return CGRectContainsPoint(bounds, point)
+    public override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+        let bounds = self.bounds.insetBy(dx: -thumbTouchSize.width, dy: -thumbTouchSize.height)
+        return bounds.contains(point)
     }
     
-    public override func beginTrackingWithTouch(touch: UITouch, withEvent event: UIEvent?) -> Bool {
-        let beginTracking = beginTrackWithTouchUsingExtendedTouchArea(touch) || allowTap
+    public override func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
+        let beginTracking = beginTrackWithTouchUsingExtendedTouchArea(touch: touch) || allowTap
 
         if allowTap {
-            let tapPoint = touch.locationInView(self)
+            let tapPoint = touch.location(in: self)
             let valueFromTap = CGFloat(maximumValue - minimumValue) * (tapPoint.x - CGFloat(thumbTouchSize.width/2)) / (frame.size.width - thumbTouchSize.width)
             let newValue = minimumValue + Float(valueFromTap)
             setValue(newValue, animated: true)
-            sendActionsForControlEvents(.TouchDragInside)
-            sendActionsForControlEvents(.ValueChanged)
+            sendActions(for: .touchDragInside)
+            sendActions(for: .valueChanged)
         }
 
         if beginTracking {
             beganTracking()
-            delegate?.scrubbingStatusChanged(true)
+            delegate?.scrubbingStatusChanged(nowScrubbing: true)
         }
 
         return beginTracking
     }
     
-    public override func continueTrackingWithTouch(touch: UITouch, withEvent event: UIEvent?) -> Bool {
-        if tracking {
-            let previousLocation = touch.previousLocationInView(self)
-            let currentLocation = touch.locationInView(self)
+    public override func continueTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
+        if isTracking {
+            let previousLocation = touch.previousLocation(in: self)
+            let currentLocation = touch.location(in: self)
             let trackingOffsetX = currentLocation.x - previousLocation.x
             
             /* Find the scrubbing speed that corresponds to the touch's vertical offset */
@@ -114,9 +114,9 @@ public class MultiSpeedSlider: UISlider {
             let scrubbingSpeedChangePositionIndex = indexOfLowerScrubbingSpeed(forOffset: verticalOffset) ?? scrubbingSpeeds.count
             scrubbingSpeed = scrubbingSpeeds[scrubbingSpeedChangePositionIndex - 1]
             
-            let trackRect = trackRectForBounds(bounds)
+            let track = trackRect(forBounds: bounds)
             let valueInterval = maximumValue - minimumValue
-            let trackingOffsetRelativeToTrackRect = Float(trackingOffsetX/trackRect.size.width)
+            let trackingOffsetRelativeToTrackRect = Float(trackingOffsetX/track.size.width)
             realPositionValue = realPositionValue + valueInterval * trackingOffsetRelativeToTrackRect
             let valueAdjustment = Float(scrubbingSpeed) * valueInterval * trackingOffsetRelativeToTrackRect
             var thumbAdjustment: Float = 0
@@ -148,19 +148,19 @@ public class MultiSpeedSlider: UISlider {
                 value += totalAdjustment
             }
             
-            if continuous {
-                sendActionsForControlEvents(UIControlEvents.ValueChanged)
+            if isContinuous {
+                sendActions(for: .valueChanged)
             }
         }
         
-        return tracking
+        return isTracking
     }
     
-    public override func endTrackingWithTouch(touch: UITouch?, withEvent event: UIEvent?) {
-        if tracking {
+    public override func endTracking(_ touch: UITouch?, with event: UIEvent?) {
+        if isTracking {
             scrubbingSpeed = scrubbingSpeeds[0]
-            sendActionsForControlEvents(UIControlEvents.ValueChanged)
-            delegate?.scrubbingStatusChanged(false)
+            sendActions(for: UIControlEvents.valueChanged)
+            delegate?.scrubbingStatusChanged(nowScrubbing: false)
         }
     }
 }
