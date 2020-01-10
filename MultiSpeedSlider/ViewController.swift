@@ -33,7 +33,7 @@ class ViewController: UIViewController, MultiSpeedSliderProtocol {
         slider.allowTap = true
     }
     
-    private func durationAsHourMinuteSecondString(timeInterval: NSTimeInterval) -> String {
+    private func durationAsHourMinuteSecondString(timeInterval: TimeInterval) -> String {
         let interval = Int(timeInterval)
         let seconds = interval % 60
         let minutes = (interval / 60) % 60
@@ -42,11 +42,11 @@ class ViewController: UIViewController, MultiSpeedSliderProtocol {
         return timeString
     }
     
-    private func updateLabels(maybeTimeElapsed: NSTimeInterval? = nil) {
-        let timeElapsed = maybeTimeElapsed ?? NSTimeInterval(slider.value)
-        let timeRemaining = NSTimeInterval(slider.maximumValue) - timeElapsed
-        elapsed.text = durationAsHourMinuteSecondString(timeElapsed)
-        remaining.text = durationAsHourMinuteSecondString(timeRemaining)
+    private func updateLabels(maybeTimeElapsed: TimeInterval? = nil) {
+        let timeElapsed = maybeTimeElapsed ?? TimeInterval(slider.value)
+        let timeRemaining = TimeInterval(slider.maximumValue) - timeElapsed
+        elapsed.text = durationAsHourMinuteSecondString(timeInterval: timeElapsed)
+        remaining.text = durationAsHourMinuteSecondString(timeInterval: timeRemaining)
     }
     
     //MARK: - MultiSpeedSliderProtocol Methods
@@ -60,11 +60,11 @@ class ViewController: UIViewController, MultiSpeedSliderProtocol {
     
     //MARK: - IBAction Methods
     @IBAction func valueChanged(sender: UISlider) {
-        let elapsedValue = NSTimeInterval(Int(round((sender.value*1)/1)))
+        let elapsedValue = TimeInterval(Int(round((sender.value*1)/1)))
         let remainingAsFloat = sender.maximumValue - sender.value
-        let remainingValue = NSTimeInterval(Int(round((remainingAsFloat*1)/1)))
-        elapsed.text = durationAsHourMinuteSecondString(elapsedValue)
-        remaining.text = durationAsHourMinuteSecondString(remainingValue)
+        let remainingValue = TimeInterval(Int(round((remainingAsFloat*1)/1)))
+        elapsed.text = durationAsHourMinuteSecondString(timeInterval: elapsedValue)
+        remaining.text = durationAsHourMinuteSecondString(timeInterval: remainingValue)
     }
 }
 
